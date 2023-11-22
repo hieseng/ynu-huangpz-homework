@@ -1,0 +1,2 @@
+real a,b,c,d,e,f,g,n,m;
+g:=a+b+c+d.

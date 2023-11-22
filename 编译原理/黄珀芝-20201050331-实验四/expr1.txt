@@ -1,0 +1,9 @@
+
+main()
+{  int a1,b;
+   int x;
+   read(a1,b);
+   x=a1*5-b/3; 
+   write(x);
+return;
+}

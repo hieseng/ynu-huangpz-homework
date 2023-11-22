@@ -1,0 +1,10 @@
+main()
+{  int a,b,x;
+   x=1;
+   b=100;
+   do {
+    x=x+2;
+   write(x);}
+while x<20;
+   return;
+}

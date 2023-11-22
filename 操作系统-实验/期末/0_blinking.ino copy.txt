@@ -1,0 +1,127 @@
+/**
+ * @file 0_blinking.cpp
+ * @author Alex Olson (aolson1714@gmail.com)
+ * @brief uses ArdRTOS to schedule three blinking leds
+ * @version 0.1
+ * @date 2022-03-23
+ * 
+ * @copyright MIT Copyright (c) 2022 Alex Olson. All rights reserved. details at bottom of file.
+ * 
+ *  Purpose:
+ *      To demonstrate how to set up basic tasks using ArdRTOS
+ *      To demonstrate a common pitfall of using delay() instead of OS.delay()
+ * 
+ *  Required knowledge:
+ *      Basic c++ programming.
+ *   
+ *  Required hardware:
+ *      3 leds
+ */
+
+#include <Arduino.h>
+#include "ArdRTOS.h"
+
+unsigned char LEDS[] = {13, 11, 9};//定义无符号字符一维数组 
+unsigned char GRNDS[] = {12, 10, 8};
+
+// blinks 等待一秒钟，点亮LED，再等待一秒钟，熄灭LED，如此循环
+
+void loopBlink1();
+void loopBlink2();
+void loopBlink3();
+
+void setup() {                 // 只需运行一次的代码,如设置板子:
+                              //Arduino控制器通电或复位后，即会开始执行setup() 函数中的程序，该部分只会执行一次。
+                              // 通常会在setup() 函数中完成Arduino的初始化设置，如配置I/O口状态，初始化串口等操作
+    // tasks to blink leds.
+    // this regesters these functions for the scheduler to call.
+    OS.addTask(loopBlink1);   //三盏灯都添加任务
+    OS.addTask(loopBlink2);
+    OS.addTask(loopBlink3);
+
+    OS.begin();               //执行一旦开始就不会返回
+    // execution never returns from begin
+}
+
+void loop() {
+    // since OS.begin never returns, this function will never be called.
+    // it is also entirely unecessary and can be removed in its entirety. 
+}
+/**
+ * @brief 
+ * 
+ */
+
+//自OS以来。begin永远不会返回，这个函数永远不会被调用。
+//它也是完全不必要的，并且可以完全移除。
+
+void loopBlink1() {
+
+    unsigned char led = LEDS[0];
+    pinMode(led, OUTPUT);
+    pinMode(GRNDS[0], OUTPUT);            //分别定义这两个引脚为输出引脚
+    digitalWrite(GRNDS[0], 0);           //digitalWrite是一种函数，
+                                         //作用是设置引脚的输出电压为高电平或低电平,这里设置GRNDS接口输出电压为0，低电压
+
+    for(;;){
+        digitalWrite(led, 1);            //这里设置led接口输出电压为1，高电压，相当于点亮led
+        // notice the use of OS.delay instead of just delay. 
+        // this is important as OS.delay allows for the changing of tasks, where delay does not.
+        OS.delay(100);                  //实际就是把任务的状态切换到阻塞态,让出CPU占用,让CPU服务其它任务，等待
+        digitalWrite(led, 0);           //重新设置led接口输出电压为0，低电压；通过将引脚电平拉低，关闭LED
+        OS.delay(100);                 //继续等待
+    }
+}
+
+// from her on out, this is the same as loopBlink1.
+void loopBlink2() {
+    unsigned char led = LEDS[1];
+    pinMode(led, OUTPUT);
+    pinMode(GRNDS[1], OUTPUT);
+    digitalWrite(GRNDS[1], 0); 
+
+    for(;;){                           //2灯和1灯类似，只是等待时间变长了，表现为上一次闪烁和下一次闪烁之间时间变长
+        digitalWrite(led, 1); 
+        OS.delay(200);
+        digitalWrite(led, 0); 
+        OS.delay(200);
+    }
+}
+
+void loopBlink3() {
+    unsigned char led = LEDS[2];
+    pinMode(led, OUTPUT);
+    pinMode(GRNDS[2], OUTPUT);
+    digitalWrite(GRNDS[2], 0); 
+
+    for(;;){
+        digitalWrite(led, 1); 
+        OS.delay(300);               //3灯和2灯类似，只是等待时间变长了，表现为上一次闪烁和下一次闪烁之间时间变长
+        digitalWrite(led, 0); 
+        OS.delay(300);
+    }
+}
+                                    //因此最终展现结果表现为，直观上感觉闪烁频率：1灯>2灯>3灯
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2020 Alex Olson
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */

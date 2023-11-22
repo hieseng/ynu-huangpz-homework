@@ -1,0 +1,10 @@
+
+main()
+{  int a1,b;
+   read(a1,b);
+  {int x;
+   if a1<3-1 then x=b-6/3; else x=6;
+   write(x);
+}
+return;
+}

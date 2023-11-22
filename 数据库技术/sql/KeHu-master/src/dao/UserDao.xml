@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- namespace表示命名空间 -->
+<mapper namespace="dao.UserDao">
+	<!-- 通过账号密码查询用户 -->
+	<select id="findUser" parameterType="String" resultType="user">
+		select * from sys_user where user_code=#{usercode} and user_password=#{userpassword} and user_state='1'
+	</select>	
+	
+	<!-- 添加用户 -->
+	<insert id="createUser" parameterType="user" >
+		insert into sys_user(user_code,user_name,user_password)
+		value(#{user_code},#{user_name},#{user_password})
+	</insert>
+	
+	<select id="findpassword" parameterType="String" resultType="String">
+		select user_password where user_code=#{usercode} and user_state='1'
+	</select>
+	
+</mapper>

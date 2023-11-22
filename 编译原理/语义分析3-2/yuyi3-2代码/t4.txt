@@ -1,0 +1,4 @@
+real a,b;
+int c,d;
+f:=c+d+b;
+d:=b+a.

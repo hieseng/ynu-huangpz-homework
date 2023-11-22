@@ -1,0 +1,9 @@
+	VAR 3abc,y,&z:integer;
+        a:integer;/procedure  // aaaa
+	begin
+	  while($) 		do
+          x:=23.5+5.8.8
+ {
+dfgdfgf 
+еп╤о}if 256<>986 then } <=else ; { 
+	end.
